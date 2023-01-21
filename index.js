@@ -1,9 +1,13 @@
+const http = require("http");
 const fs = require("fs");
 
-//~ contineously give data by raising event with name 'data'.
-const ourReadStream = fs.createReadStream(`${__dirname}/bigdata.txt`); //& utf-8 encoding format.
-const ourWriteStream = fs.createWriteStream(`${__dirname}/output.txt`);
-
-ourReadStream.on("data", (chunk) => {
-  ourWriteStream.write(chunk);
-});
+const server = http.createServer(
+  (req /* readable stream */, res /* writable stream */) => {
+    const myReadStream = fs.createReadStream(
+      `${__dirname}/bigdata.txt`,
+      "utf-8"
+    );
+    myReadStream.pipe(res);
+  }
+);
+server.listen(8080);
